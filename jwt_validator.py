@@ -2,6 +2,7 @@ from os import name
 from flask import Flask, request, jsonify
 import jwt
 import requests
+from flask import send_from_directory
 
 jwt_validator = Flask(__name__)
 
@@ -21,19 +22,25 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 
 jwt_validator.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
+@jwt_validator.route('/keys/public_key.pem')
+def serve_public_key():
+    return send_from_directory('keys', 'public_key.pem')
+
 def validate_jwt(token):
     try:
         
         unverified_header = jwt.get_unverified_header(token)
         x5u_url = unverified_header.get("x5u")
+        if not x5u_url:
+            return False, "Missing x5u parameter in JWT header."
 
-     
-        with open('keys/public_key.pem', 'r') as f:
-            public_key = f.read()
+        # Fetch the PEM-encoded X.509 certificate from the x5u URL
+        response = requests.get(x5u_url)
+        if response.status_code != 200:
+            return False, f"Failed to fetch certificate from x5u URL. Status code: {response.status_code}"
+        public_key = response.text
 
-        
         decoded = jwt.decode(token, public_key, algorithms=["RS256"], options={"verify_exp": True})
-
         return True, None  # JWT is valid
     except jwt.ExpiredSignatureError:
         return False, "JWT has expired."

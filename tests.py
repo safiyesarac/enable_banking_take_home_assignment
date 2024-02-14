@@ -34,7 +34,7 @@ class TestJWTValidation(unittest.TestCase):
             "iat": int(time.time()),
             "exp": exp, 
         }
-        valid_headers = {"x5u": "https://example.com/cert.pem"}
+        valid_headers = {"x5u": "http://localhost:5000/keys/public_key.pem"}
         token = self.generate_jwt(valid_payload, valid_headers)
         print("----------",token,"-------------")
         is_valid, error = validate_jwt(token)
@@ -53,7 +53,7 @@ class TestJWTValidation(unittest.TestCase):
             "iat": 1516239022,
             "exp": 1516239022,  
         }
-        expired_headers = {"x5u": "https://example.com/cert.pem"}
+        expired_headers = {"x5u": "http://localhost:5000/keys/public_key.pem"}
         token = self.generate_jwt(expired_payload, expired_headers)
         
         is_valid, error = validate_jwt(token)

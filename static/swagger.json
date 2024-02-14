@@ -5,54 +5,41 @@
       "version": "1.0.0"
     },
     "host": "localhost:5000",
-    "schemes": [
-      "http"
-    ],
+    "basePath": "/",
+    "schemes": ["http"],
     "paths": {
-        "swagger": "2.0",
-        "info": {
-          "title": "JWT Validator API",
-          "version": "1.0.0"
-        },
-        "host": "localhost:5000",
-        "basePath": "/",
-        "schemes": ["http"],
-        "paths": {
-          "/auth": {
-            "get": {
-              "summary": "Validates JWT",
-              "description": "Validates the JWT passed in the Authorization header.",
-              "produces": ["application/json"],
-              "parameters": [
-                {
-                  "name": "Authorization",
-                  "in": "header",
-                  "description": "Bearer [token]",
-                  "required": true,
-                  "type": "string",
-                  "default": "Bearer YOUR_SAMPLE_JWT_HERE"
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "JWT is valid"
-                },
-                "400": {
-                  "description": "Bad Request: JWT is missing or invalid"
-                }
-              }
+      "/auth": {
+        "get": {
+          "summary": "Validates JWT",
+          "description": "Validates the JWT passed in the Authorization header.",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "name": "Authorization",
+              "in": "header",
+              "description": "JWT Token to be verified",
+              "required": true,
+              "type": "string",
+              "default": "Bearer YOUR_SAMPLE_JWT_HERE"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "JWT is valid"
+            },
+            "400": {
+              "description": "Bad Request: JWT is missing or invalid"
             }
           }
-        },
-        "securityDefinitions": {
-          "Bearer": {
-            "type": "apiKey",
-            "in": "header",
-            "name": "Authorization"
-          }
         }
-      
-      
+      }
+    },
+    "securityDefinitions": {
+      "Bearer": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
     }
   }
   
